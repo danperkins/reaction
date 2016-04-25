@@ -19,23 +19,35 @@ export interface IExerciseFilterProps {
   onFilterChange: (filters: IExerciseFilterContainer) => void;
 }
 
-export class ExerciseFilters extends React.Component<IExerciseFilterProps, any> {
+export interface IExerciseFilterState {
+  filters?: IExerciseFilterContainer;
+  filterUpdate: number;
+  unsavedFilters: boolean;
+}
+
+export class ExerciseFilters extends React.Component<IExerciseFilterProps, IExerciseFilterState> {
   private filterUpdate;
-  private allowUpdate = false;
   private applyFilterUpdates: () => void;
+
   constructor(props) {
     super(props);
+    let clonedFilters = this.cloneFilterContainer(this.props.filters);
     this.state = {
-      filters: this.props.filters,
-      unsavedFilters: false,
-    };
-    this.filterUpdate = (fc, f) => {
-      this.state.filters[fc].filters[f] = !this.state.filters[fc].filters[f];
-      this.allowUpdate = true;
-      this.setState({filters: this.state.filters, unsavedFilters: true});
+      filters: clonedFilters,
+      filterUpdate: 1,
+      unsavedFilters: false
     };
 
-    this.applyFilterUpdates = () => this.props.onFilterChange(this.state.filters);
+    this.filterUpdate = (fc, f) => {
+      this.state.filters[fc].filters[f] = !this.state.filters[fc].filters[f];
+      this.setState({filters: this.state.filters, filterUpdate: this.state.filterUpdate + 1, unsavedFilters: true});
+    };
+
+    this.applyFilterUpdates = () => {
+      this.setState({ filterUpdate: this.state.filterUpdate + 1, unsavedFilters: false});
+      let newFilterContainer = this.cloneFilterContainer(this.state.filters);
+      this.props.onFilterChange(newFilterContainer);
+    }
   }
 
   render() {
@@ -43,11 +55,7 @@ export class ExerciseFilters extends React.Component<IExerciseFilterProps, any> 
       let filter = this.state.filters[fc];
       let items = Object.keys(filter.filters).map((i) => {
         let clickHandler = () => this.filterUpdate(fc, i);
-        let checkbox = null;
-        if (filter.filters[i])
-          checkbox = <input type="checkbox" checked="true" />
-        else
-          checkbox = <input type="checkbox" />
+        let checkbox = <input type="checkbox" readOnly checked={filter.filters[i]} />
         return <div className="filter" key={i} onClick={clickHandler}>{checkbox}  {i}</div>
       });
       return (
@@ -57,6 +65,7 @@ export class ExerciseFilters extends React.Component<IExerciseFilterProps, any> 
           </div>
       );
     });
+    
     return (
       <div className="exerciseFilters">
         <div className="filterPaneHeader"><span className="title">Filter Pane</span></div>
@@ -64,6 +73,19 @@ export class ExerciseFilters extends React.Component<IExerciseFilterProps, any> 
         <div><button ref="applyFilterBtn" onClick={this.applyFilterUpdates} disabled={!this.state.unsavedFilters}>ApplyFilter</button></div>
       </div>
     );
+  }
+
+  private cloneFilterContainer(fc: IExerciseFilterContainer): IExerciseFilterContainer {
+    let newFc: IExerciseFilterContainer = {};
+    for (let category in fc) {
+      let f = fc[category];
+      newFc[category] = {displayText: f.displayText, matchCondition: f.matchCondition, filters: {}};
+      for (let filter in f.filters) {
+        newFc[category].filters[filter] = f.filters[filter];
+      }
+    }
+
+    return newFc;
   }
 
   public componentWillMount(): void {
@@ -78,13 +100,10 @@ export class ExerciseFilters extends React.Component<IExerciseFilterProps, any> 
     console.log("Will Receive Props");
   }
 
-  public shouldComponentUpdate(nextProps: any, nextState): boolean {
+  public shouldComponentUpdate(nextProps: any, nextState: IExerciseFilterState): boolean {
     console.log("Should Update");
-    if (this.allowUpdate) {
-      this.allowUpdate = false;
-      return true;
-    } else
-      return false;
+    // Only do an update if it came from our own setState call
+    return nextState.filterUpdate !== this.state.filterUpdate;
   }
 
   public componentWillUpdate(nextProps: any, nextState: any): void {

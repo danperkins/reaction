@@ -26,15 +26,22 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
 
   // Methods for managing the active Workout
   private addExerciseCallback: (name: string) => void;
-  private logWorkout: () => void;
-  private clearWorkout: () => void;
+
+  // Ref callbacks
+  private searchRefCallback: (input: HTMLInputElement) => void;
+  private searchRef: HTMLInputElement;
+  private workoutNotesCallback: (input: HTMLInputElement) => void;
+  private workoutNotes: HTMLInputElement;
+
+  private clearWorkoutCallback: () => void;
+  private logWorkoutCallback: () => void;
 
   constructor(props) {
     super(props);
 
     // Initial state
     this.state = {
-      filters: this.getFiltersFromCatalog(),
+      filters: this.getInitialFilters(),
       searchString: "",
       currentWorkout: { exercises: [], notes: ''}
     }
@@ -45,35 +52,11 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
 
     //Workout callbacks
     this.addExerciseCallback = (name: string) => this.addExerciseToCurrentWorkout(name);
+    this.searchRefCallback = (input: HTMLInputElement) => { this.searchRef = input; }
+    this.workoutNotesCallback = (input: HTMLInputElement) => { this.workoutNotes = input; }
 
-    this.logWorkout = () => {
-      let notes = (this.refs as any).workoutNotes;
-      let newWorkout = this.state.currentWorkout;
-      newWorkout.notes = notes.value;
-      notes.value = '';
-
-      this.props.addNewWorkout(newWorkout);
-      this.setState({
-        currentWorkout: { exercises: [], notes: ''},
-      });
-    }
-
-    this.clearWorkout = () => {
-      let notesInput = (this.refs as any).workoutNotes;
-      notesInput.value = '';
-      this.setState({
-        currentWorkout: { exercises: [], notes: ''}
-      })
-    }
-  }
-
-  private addExerciseToCurrentWorkout(name: string): void {
-    this.setState({
-      currentWorkout: {
-        exercises: this.state.currentWorkout.exercises.concat([name]),
-        notes: this.state.currentWorkout.notes
-      }
-    });
+    this.clearWorkoutCallback = () => this.clearWorkout();
+    this.logWorkoutCallback = () => this.logWorkout();
   }
 
   render(): JSX.Element {
@@ -82,23 +65,48 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
 
     return (
       <div className="exerciseFinder">
+
         <ExerciseFilters filters={this.state.filters} onFilterChange={this.onFilterChange} />
+
         <div className="exerciseCatalogArea">
+
           <div className="currentWorkout">
             <span className="title">Current Workout:</span><span>  {currentWorkoutContent}</span>
             <div className="controls">
-              <button className="clearCurrentWorkout" onClick={this.clearWorkout}>Clear Workout</button>
-              <button className="logWorkout" onClick={this.logWorkout} disabled={this.state.currentWorkout.exercises.length <= 0}>Log Workout</button>
-              <span>Notes:<input type="text" ref="workoutNotes" /></span>
+              <button className="clearCurrentWorkout" onClick={this.clearWorkoutCallback}>Clear Workout</button>
+              <button className="logWorkout" onClick={this.logWorkoutCallback} disabled={this.state.currentWorkout.exercises.length <= 0}>Log Workout</button>
+              <span>Notes:<input type="text" ref={this.workoutNotesCallback} /></span>
             </div>
           </div>
+
           <div className="catalogSearch">
-            <span>Search Exercises:</span><input type="text" onChange={this.onSearchChange} ref="searchRef" />
+            <span>Search Exercises:</span><input type="text" onChange={this.onSearchChange} ref={this.searchRefCallback} />
           </div>
+
           <ExerciseCatalog catalog={filteredItems} addExerciseCallback={this.addExerciseCallback}/>
+
         </div>
       </div>
     );
+  }
+
+  private logWorkout() {
+    let newWorkout = this.state.currentWorkout;
+    newWorkout.notes = this.workoutNotes.value;
+    this.workoutNotes.value = '';
+
+    this.props.addNewWorkout(newWorkout);
+    this.setState({
+      currentWorkout: { exercises: [], notes: ''},
+    });
+  }
+
+  private clearWorkout() {
+    let notesInput = (this.refs as any).workoutNotes;
+    notesInput.value = '';
+    this.setState({
+      currentWorkout: { exercises: [], notes: ''}
+    })
   }
 
   // Apply the filters to the catalog and match the exercise 'Name' with the searchString
@@ -134,20 +142,24 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
     });
   }
 
-  private updateSearchString(): void {
-    let refString = (this.refs['searchRef'] as any).value;
+  private addExerciseToCurrentWorkout(name: string): void {
     this.setState({
-      searchString: refString
-    })
-  }
-
-  private updateFilters(filterContainer: any): void {
-    this.setState({
-      filters: filterContainer
+      currentWorkout: {
+        exercises: this.state.currentWorkout.exercises.concat([name]),
+        notes: this.state.currentWorkout.notes
+      }
     });
   }
 
-  private getFiltersFromCatalog(): IExerciseFilterContainer {
+  private updateSearchString(): void {
+    this.setState({ searchString: this.searchRef.value });
+  }
+
+  private updateFilters(filterContainer: any): void {
+    this.setState({ filters: filterContainer });
+  }
+
+  private getInitialFilters(): IExerciseFilterContainer {
     let filters: IExerciseFilterContainer = {
       muscleGroups: {
         displayText: 'Muscle Groups',
@@ -174,6 +186,3 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
     return filters;
   }
 }
-
-
-//ReactDOM.render(<ExerciseCatalog catalog={StaticExerciseCatalog} />, document.getElementById('appRoot'));

@@ -6,12 +6,12 @@ export interface IWorkout {
   date?: number;
 }
 
-export interface WorkoutHistoryProps {
+export interface IWorkoutHistoryProps {
   workouts: IWorkout[];
 }
 
-export function WorkoutHistory(props: WorkoutHistoryProps) {
-  let inlineStyle = {
+export function WorkoutHistory(props: IWorkoutHistoryProps) {
+  let inlineStyle: React.CSSProperties = {
     borderTop: '2px solid orange',
     marginTop: '20px',
     paddingTop: '10px',

@@ -15,7 +15,7 @@ interface ExerciseProps {
 export function ExerciseCatalog(props: CatalogProps) {
   return (
     <div className="exerciseCatalog">
-        {props.catalog.map((e) => <Exercise exercise={e} addExerciseCallback={() => props.addExerciseCallback(e.name)} />)}
+        {props.catalog.map((e) => <Exercise key={e.id} exercise={e} addExerciseCallback={() => props.addExerciseCallback(e.name)} />)}
     </div>
   );
 }
