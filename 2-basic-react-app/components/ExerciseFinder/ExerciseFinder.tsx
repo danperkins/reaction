@@ -48,7 +48,7 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
 
     // Catalog callbacks
     this.onFilterChange = (fc: IExerciseFilterContainer) => this.updateFilters(fc);
-    this.onSearchChange = () => this.updateSearchString();
+    this.onSearchChange = () => { this.setState({ searchString: this.searchRef.value }) };
 
     //Workout callbacks
     this.addExerciseCallback = (name: string) => this.addExerciseToCurrentWorkout(name);
@@ -149,10 +149,6 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
         notes: this.state.currentWorkout.notes
       }
     });
-  }
-
-  private updateSearchString(): void {
-    this.setState({ searchString: this.searchRef.value });
   }
 
   private updateFilters(filterContainer: any): void {
