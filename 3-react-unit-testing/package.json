@@ -1,0 +1,36 @@
+{
+  "name": "1-getting-started",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha testConfig/mochaCmd.js",
+    "start": "webpack-dev-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.11.1",
+    "css-loader": "^0.23.1",
+    "es6-promise": "^3.2.1",
+    "less": "^2.6.1",
+    "less-loader": "^2.2.3",
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1",
+    "style-loader": "^0.13.1",
+    "ts-loader": "^0.8.2",
+    "typescript": "^1.8.9",
+    "typings": "^0.7.11",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "enzyme": "^2.3.0",
+    "jsdom": "^8.4.0",
+    "mocha": "^2.4.5",
+    "react-addons-css-transition-group": "15.1.0",
+    "react-addons-test-utils": "^15.1.0",
+    "sinon": "^2.0.0-pre"
+  }
+}
