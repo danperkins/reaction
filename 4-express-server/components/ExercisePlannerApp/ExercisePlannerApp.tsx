@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-// import StaticExerciseCatalog from '../ExerciseCatalog/StaticCatalog';
-// import StaticWorkoutHistory from '../WorkoutHistory/StaticWorkoutHistory';
 import { IExercise } from '../Exercise/Exercise';
 import { ExerciseFinder } from '../ExerciseFinder/ExerciseFinder';
 import { IWorkout, WorkoutHistory } from '../WorkoutHistory/WorkoutHistory';

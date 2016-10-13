@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import StaticExerciseCatalog from '../ExerciseCatalog/StaticCatalog';
 import ExerciseCatalog from '../ExerciseCatalog/ExerciseCatalog';
 import { IExercise } from '../Exercise/Exercise';
 import { ExerciseFilters, IExerciseFilterContainer} from '../ExerciseFilters/ExerciseFilters';
