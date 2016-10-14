@@ -1,6 +1,10 @@
 import * as React from 'react';
+import * as axios from 'axios';
+
+import './WorkoutHistory.less';
 
 export interface IWorkout {
+  id: number;
   exercises: string[];
   notes?: string;
   date?: number;
@@ -8,22 +12,17 @@ export interface IWorkout {
 
 export interface IWorkoutHistoryProps {
   workouts: IWorkout[];
+  deleteWorkout: (w: IWorkout) => void;
 }
 
 export function WorkoutHistory(props: IWorkoutHistoryProps) {
-  let inlineStyle: React.CSSProperties = {
-    borderTop: '2px solid orange',
-    marginTop: '20px',
-    paddingTop: '10px',
-    paddingBottom: '20px'
-  }
-
   let workoutItems = props.workouts.map((w) => {
       return (
-        <div className="workout" style={inlineStyle}>
+        <div className='workout'>
           <div>Exercises: {w.exercises.join(', ')}</div>
           <div>Notes: {w.notes}</div>
           <div>Date: {w.date}</div>
+          <div className='deleteBtn' onClick={() => props.deleteWorkout(w)}>x</div>
         </div>
       );
   });

@@ -44,7 +44,7 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
     this.state = {
       filters: this.getInitialFilters(),
       searchString: "",
-      currentWorkout: { exercises: [], notes: ''}
+      currentWorkout: { id: null, exercises: [], notes: ''}
     }
 
     // Catalog callbacks
@@ -97,9 +97,7 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
       this.workoutNotes.value = '';
 
       return this.props.addNewWorkout(newWorkout).then((res) => {
-          this.setState({
-            currentWorkout: { exercises: [] },
-          });
+          this.clearWorkout();
       });
   }
 
@@ -107,7 +105,7 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
     let notesInput = (this.refs as any).workoutNotes;
     notesInput.value = '';
     this.setState({
-      currentWorkout: { exercises: [], notes: ''}
+      currentWorkout: { id: null, exercises: [], notes: ''}
     })
   }
 
@@ -147,6 +145,7 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
   private addExerciseToCurrentWorkout(name: string): void {
     this.setState({
       currentWorkout: {
+        id: this.state.currentWorkout.id,
         exercises: this.state.currentWorkout.exercises.concat([name]),
         notes: this.state.currentWorkout.notes
       }
