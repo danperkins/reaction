@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha testConfig/mochaCmd.js",
     "start": "node app.js"
   },
   "author": "",
@@ -17,12 +17,19 @@
     "express": "^4.13.4",
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
-    "react": "^0.14.8",
-    "react-dom": "^0.14.8",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "style-loader": "^0.13.1",
     "ts-loader": "^0.8.2",
-    "typescript": "^1.8.9",
     "typings": "^0.7.11",
     "webpack": "^1.12.14"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "enzyme": "^2.3.0",
+    "jsdom": "^8.4.0",
+    "mocha": "^2.4.5",
+    "react-addons-test-utils": "^15.1.0",
+    "sinon": "^2.0.0-pre"
   }
 }

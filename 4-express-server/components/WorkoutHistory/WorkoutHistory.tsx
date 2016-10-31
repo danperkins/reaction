@@ -4,7 +4,7 @@ import * as axios from 'axios';
 import './WorkoutHistory.less';
 
 export interface IWorkout {
-  id: number;
+  id: string;
   exercises: string[];
   notes?: string;
   date?: number;

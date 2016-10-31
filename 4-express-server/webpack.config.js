@@ -1,13 +1,20 @@
 module.exports = {
-  entry: './main.tsx',
+  entry:  {
+    index: './main.tsx',
+    test: './testConfig/testList.ts'
+  },
   resolve: {
-    extensions: ['', '.ts', '.tsx', '.js']
+    extensions: ['', '.js', '.ts', '.tsx'],
+    alias: {
+      //'sinon': 'sinon/pkg/sinon'
+    }
   },
   output: {
     path: './dist',
-    filename: 'index.js'
+    filename: '[name].js'
   },
   module: {
+    //noParse: [ /sinon/],
     loaders: [
       { test: /\.less$/, loader: "style!css!less" },
       { test: /\.css$/, loader:"stsyle!css"},
@@ -17,5 +24,12 @@ module.exports = {
         loader: 'ts-loader',
       },
     ]
+  },
+  // This is listed in the 'enzyme' getting started details for making webpack work well with that library
+  externals: {
+    'cheerio': 'window',
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true
   }
 }

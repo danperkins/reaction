@@ -76,12 +76,12 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
             <div className="controls">
               <button className="clearCurrentWorkout" onClick={this.clearWorkoutCallback}>Clear Workout</button>
               <button className="logWorkout" onClick={this.logWorkoutCallback} disabled={this.state.currentWorkout.exercises.length <= 0}>Log Workout</button>
-              <span>Notes:<input type="text" ref={this.workoutNotesCallback} /></span>
+              <span>Notes:<input className="notes" type="text" ref={this.workoutNotesCallback} /></span>
             </div>
           </div>
 
           <div className="catalogSearch">
-            <span>Search Exercises:</span><input type="text" onChange={this.onSearchChange} ref={this.searchRefCallback} />
+            <span>Search Exercises:</span><input className="search" type="text" onChange={this.onSearchChange} ref={this.searchRefCallback} />
           </div>
 
           <ExerciseCatalog catalog={filteredItems} addExerciseCallback={this.addExerciseCallback}/>
@@ -98,19 +98,19 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
 
       return this.props.addNewWorkout(newWorkout).then((res) => {
           this.clearWorkout();
+          return res;
       });
   }
 
   private clearWorkout() {
-    let notesInput = (this.refs as any).workoutNotes;
-    notesInput.value = '';
+    this.workoutNotes.value = '';
     this.setState({
       currentWorkout: { id: null, exercises: [], notes: ''}
     })
   }
 
   // Apply the filters to the catalog and match the exercise 'Name' with the searchString
-  private getFilteredItems(): IExercise[] {
+  public getFilteredItems(): IExercise[] {
     return this.props.catalog.filter((e) => {
       return e.name.toLowerCase().indexOf(this.state.searchString.toLowerCase()) >= 0;
     }).filter((e) => {
@@ -142,7 +142,7 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
     });
   }
 
-  private addExerciseToCurrentWorkout(name: string): void {
+  public addExerciseToCurrentWorkout(name: string): void {
     this.setState({
       currentWorkout: {
         id: this.state.currentWorkout.id,

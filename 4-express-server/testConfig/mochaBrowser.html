@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!--
+  Open this html file in a browser to run and debug the test suite
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+</head>
+<body>
+  <div id="mocha"></div>
+  <!-- The script tags need to be in this order for the tests to run -->
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script>mocha.setup('bdd')</script>
+  <script src="../dist/test.js"></script>
+  <script>mocha.run();</script>
+</body>
+</html>
