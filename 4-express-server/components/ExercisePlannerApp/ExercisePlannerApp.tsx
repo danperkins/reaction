@@ -41,7 +41,11 @@ export class ExercisePlannerApp extends React.Component<any,any> {
         workoutHistory: this.state.workoutHistory.concat([workout])
       })
       return workout;
-    })
+    }).catch((e) => {
+      let err = JSON.stringify(e.response.data.error);
+      window.alert(err);
+      return Promise.reject(err);
+    });
   }
 
   deleteWorkout(workout: IWorkout) {
@@ -64,7 +68,7 @@ export class ExercisePlannerApp extends React.Component<any,any> {
     }).catch((err) => {
       console.log('Error: ' + err);
     });
-    
+
   }
 
   render(): JSX.Element {

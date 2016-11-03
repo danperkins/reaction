@@ -65,7 +65,7 @@ export class ExerciseFilters extends React.Component<IExerciseFilterProps, IExer
           </div>
       );
     });
-    
+
     return (
       <div className="exerciseFilters">
         <div className="filterPaneHeader"><span className="title">Filter Pane</span></div>
@@ -86,31 +86,5 @@ export class ExerciseFilters extends React.Component<IExerciseFilterProps, IExer
     }
 
     return newFc;
-  }
-
-  public componentWillMount(): void {
-    console.log("Will Mount");
-  }
-
-  public componentDidMount(): void {
-    console.log("Did Mount");
-  }
-
-  public componentWillReceiveProps(nextProps: any): void {
-    console.log("Will Receive Props");
-  }
-
-  public shouldComponentUpdate(nextProps: any, nextState: IExerciseFilterState): boolean {
-    console.log("Should Update");
-    // Only do an update if it came from our own setState call
-    return nextState.filterUpdate !== this.state.filterUpdate;
-  }
-
-  public componentWillUpdate(nextProps: any, nextState: any): void {
-    console.log("Will Update");
-  }
-
-  public componentDidUpdate(nextProps: any, nextState: any): void {
-    console.log("Did update");
   }
 }

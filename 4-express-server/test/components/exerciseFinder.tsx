@@ -88,57 +88,80 @@ describe("ExerciseFinder component", () => {
             let callbackArgs = callback.args[0][0] as IWorkout;
             chai.expect(callbackArgs.notes, 'Workout passed to callback with test notes').to.be.equal(testNotes);
             chai.expect(callbackArgs.exercises, 'Workout passed to callback with exercises').to.be.equal(testExercises);
+            chai.expect(exerciseFinder.state().currentWorkout.exercises, 'exercises are cleared').to.deep.equal([]);
         });
     });
 
-      it('addExerciseToCurrentWorkout callback should update the state', () => {
-          let exerciseFinder = enzyme.shallow(
-              <ExerciseFinder addNewWorkout={(w: any) => Promise.resolve({})} catalog={StaticExerciseCatalog} />);
-          let inst = exerciseFinder.instance() as ExerciseFinder;
+    it('should not clear exercises on addNewWorkout error', () => {
+        let callback: Sinon.SinonSpy;
+        let testExercises = ['test Exercise'];
+        let workout: IWorkout = { id: '3', exercises: testExercises };
 
-          let ex1 = 'test exercise1';
-          let ex2 = 'test exercise2'
-          chai.expect(exerciseFinder.state().currentWorkout.exercises,
+        let promise = new Promise((resolve, reject) => {
+            callback = sinon.spy((w: IWorkout) => {
+                resolve();
+                return Promise.reject('Error adding workout');
+            });
+        });
+        let exerciseFinder = enzyme.mount(<ExerciseFinder addNewWorkout={callback} catalog={[]} />);
+        exerciseFinder.setState({ currentWorkout: workout });
+
+        exerciseFinder.find('.logWorkout').simulate('click');
+
+        return promise.then(() => {
+            chai.expect(callback.calledOnce, 'Callback invoked one time').to.be.true;
+            chai.expect(exerciseFinder.state().currentWorkout.exercises, 'exercises are not cleared').to.be.equal(testExercises);
+        });
+    });
+
+    it('addExerciseToCurrentWorkout callback should update the state', () => {
+        let exerciseFinder = enzyme.shallow(
+            <ExerciseFinder addNewWorkout={(w: any) => Promise.resolve({})} catalog={StaticExerciseCatalog} />);
+        let inst = exerciseFinder.instance() as ExerciseFinder;
+
+        let ex1 = 'test exercise1';
+        let ex2 = 'test exercise2'
+        chai.expect(exerciseFinder.state().currentWorkout.exercises,
             'initial exercise list should be empty').to.deep.equal([]);
-          inst.addExerciseToCurrentWorkout(ex1);
-          inst.addExerciseToCurrentWorkout(ex2);
-          chai.expect(exerciseFinder.state().currentWorkout.exercises,
+        inst.addExerciseToCurrentWorkout(ex1);
+        inst.addExerciseToCurrentWorkout(ex2);
+        chai.expect(exerciseFinder.state().currentWorkout.exercises,
             'current workout state is updated with new exercises').to.deep.equal([ex1, ex2]);
-      });
+    });
 
-      it('should filter exercises based on Filters', () => {
-          let exerciseFinder = enzyme.shallow(
-              <ExerciseFinder addNewWorkout={(w: any) => Promise.resolve({})} catalog={StaticExerciseCatalog} />);
-          let filters: IExerciseFilterContainer = exerciseFinder.state().filters;
-          let inst = exerciseFinder.instance() as ExerciseFinder;
-          let allItems = inst.getFilteredItems();
+    it('should filter exercises based on Filters', () => {
+        let exerciseFinder = enzyme.shallow(
+            <ExerciseFinder addNewWorkout={(w: any) => Promise.resolve({})} catalog={StaticExerciseCatalog} />);
+        let filters: IExerciseFilterContainer = exerciseFinder.state().filters;
+        let inst = exerciseFinder.instance() as ExerciseFinder;
+        let allItems = inst.getFilteredItems();
 
-          chai.expect(allItems.length, 'all items should be visible').to.equal(StaticExerciseCatalog.length);
+        chai.expect(allItems.length, 'all items should be visible').to.equal(StaticExerciseCatalog.length);
 
-          filters['equipment'].filters['Rack'] = false;
-          chai.expect(inst.getFilteredItems().length, 'removing Rack filter should hide some items - its an AND filter').to.equal(4);
+        filters['equipment'].filters['Rack'] = false;
+        chai.expect(inst.getFilteredItems().length, 'removing Rack filter should hide some items - its an AND filter').to.equal(4);
 
-          filters['muscleGroups'].filters['Chest'] = false;
-          chai.expect(inst.getFilteredItems().length, 'removing Chest filter should not hide items - its an OR filter').to.equal(4);
+        filters['muscleGroups'].filters['Chest'] = false;
+        chai.expect(inst.getFilteredItems().length, 'removing Chest filter should not hide items - its an OR filter').to.equal(4);
 
-          filters['muscleGroups'].filters['Triceps'] = false;
-          chai.expect(inst.getFilteredItems().length, 'removing Chest and Triceps filter should hide items').to.be.equal(3);
+        filters['muscleGroups'].filters['Triceps'] = false;
+        chai.expect(inst.getFilteredItems().length, 'removing Chest and Triceps filter should hide items').to.be.equal(3);
       });
 
       it('should filter exercises based on Search', () => {
-          let exerciseFinder = enzyme.mount(
-              <ExerciseFinder addNewWorkout={(w: any) => Promise.resolve({})} catalog={StaticExerciseCatalog} />);
-          let inst = exerciseFinder.instance() as ExerciseFinder;
-          let allItems = inst.getFilteredItems();
-          chai.expect(allItems.length, 'all items should be visible').to.equal(StaticExerciseCatalog.length);
+        let exerciseFinder = enzyme.mount(
+            <ExerciseFinder addNewWorkout={(w: any) => Promise.resolve({})} catalog={StaticExerciseCatalog} />);
+        let inst = exerciseFinder.instance() as ExerciseFinder;
+        let allItems = inst.getFilteredItems();
+        chai.expect(allItems.length, 'all items should be visible').to.equal(StaticExerciseCatalog.length);
 
-          let searchInput = exerciseFinder.find('input.search');
-          (searchInput as any).node.value = 'b';
-          searchInput.simulate('change');
-          chai.expect(inst.getFilteredItems().length, 'search for "b" should hide some items').to.equal(2);
+        let searchInput = exerciseFinder.find('input.search');
+        (searchInput as any).node.value = 'b';
+        searchInput.simulate('change');
+        chai.expect(inst.getFilteredItems().length, 'search for "b" should hide some items').to.equal(2);
 
-          (searchInput as any).node.value = 'd';
-          searchInput.simulate('change');
-          chai.expect(inst.getFilteredItems().length, 'search for "d" should hide different items').to.equal(3);
-      });
+        (searchInput as any).node.value = 'd';
+        searchInput.simulate('change');
+        chai.expect(inst.getFilteredItems().length, 'search for "d" should hide different items').to.equal(3);
+    });
 });

@@ -92,14 +92,17 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
   }
 
   private logWorkout() {
-      let newWorkout = this.state.currentWorkout;
-      newWorkout.notes = this.workoutNotes.value;
-      this.workoutNotes.value = '';
+    let newWorkout = this.state.currentWorkout;
+    newWorkout.notes = this.workoutNotes.value;
+    this.workoutNotes.value = '';
 
-      return this.props.addNewWorkout(newWorkout).then((res) => {
-          this.clearWorkout();
-          return res;
-      });
+    return this.props.addNewWorkout(newWorkout).then((res) => {
+      this.clearWorkout();
+      return res;
+    })
+    .catch((e) => {
+        console.log(e);
+    });
   }
 
   private clearWorkout() {
