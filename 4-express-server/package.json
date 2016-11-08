@@ -1,10 +1,12 @@
 {
-  "name": "1-getting-started",
+  "name": "4-express-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "mocha testConfig/mochaCmd.js",
+    "build": "webpack",
+    "typings": "typings install",
     "start": "node app.js"
   },
   "author": "",
