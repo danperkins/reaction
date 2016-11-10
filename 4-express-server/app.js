@@ -1,21 +1,19 @@
-'use strict';
-let express = require('express');
-const fs = require('fs');
-let bodyParser = require('body-parser');
-const pug = require('pug');
+const express = require('express');
+const app = express();
 
-let app = express();
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(express.static('dist'));
-app.set('view engine', 'pug');
 
-let apiController = require('./server/apiController').default;
+const pug = require('pug');
+const compiledTemplate = pug.compileFile('./views/index.pug');
+
+app.use(express.static('dist'));
+
+const apiController = require('./server/apiController').default;
 app.use('/api', apiController);
 
-
-let compiledTemplate = pug.compileFile('./views/index.pug');
 app.get('/', (req, res) => {
-    res.send(compiledTemplate({ title: 'PUG Workout Tracker' }));
+    res.send(compiledTemplate({ title: 'PUG Compiled Workout Tracker' }));
 });
 
 app.listen(3000, function() {
