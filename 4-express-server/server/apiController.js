@@ -1,8 +1,7 @@
 'use strict';
-let express = require('express');
-let api = express();
+let routes = require('express').Router();
 
-api.use('/exercises', require('./exerciseApi').default);
-api.use('/workouts', require('./workoutApi').default);
+routes.use('/exercises', require('./exerciseApi').default);
+routes.use('/workouts', require('./workoutApi').default);
 
-exports.default = api;
+exports.default = routes;

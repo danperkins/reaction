@@ -1,6 +1,5 @@
 'use strict';
-let express = require('express');
-let api = express();
+let routes = require('express').Router();
 const fs = require('fs');
 
 let resource = './resources/workoutHistory.json';
@@ -11,11 +10,11 @@ if (!nextId) {
     nextId = Date.now();
 }
 
-api.get('/', (req, res) => {
+routes.get('/', (req, res) => {
     res.json(workouts);
 });
 
-api.delete('/:workoutId', (req, res) => {
+routes.delete('/:workoutId', (req, res) => {
     let newWorkouts = workouts.filter((w) => w.id !== req.params.workoutId);
 
     if (newWorkouts.length < workouts.length) {
@@ -40,7 +39,7 @@ api.delete('/:workoutId', (req, res) => {
     }
 });
 
-api.post('/', (req, res) => {
+routes.post('/', (req, res) => {
     let workout = req.body;
     let error = null;
     if (!workout.notes) {
@@ -77,4 +76,4 @@ api.post('/', (req, res) => {
     }
 });
 
-exports.default = api;
+exports.default = routes;
