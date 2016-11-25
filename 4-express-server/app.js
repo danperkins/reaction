@@ -4,6 +4,9 @@ const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
+const compression = require('compression');
+app.use(compression({ threshold: 0 }));
+
 const pug = require('pug');
 const compiledTemplate = pug.compileFile('./views/index.pug');
 

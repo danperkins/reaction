@@ -16,9 +16,9 @@ export interface IWorkoutHistoryProps {
 }
 
 export function WorkoutHistory(props: IWorkoutHistoryProps) {
-  let workoutItems = props.workouts.map((w) => {
+  let workoutItems = props.workouts.map((w, i) => {
       return (
-        <div className='workout'>
+        <div className='workout' key={i}>
           <div>Exercises: {w.exercises.join(', ')}</div>
           <div>Notes: {w.notes}</div>
           <div>Date: {w.date}</div>

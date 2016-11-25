@@ -9,12 +9,13 @@ let exercises = fs.readFileSync(resource, 'utf8');
 exercises = JSON.parse(exercises);
 
 api.get('/', (req, res) => {
-    res.send(exercises);
+    res.json(exercises);
 });
 
 api.put('/', (req, res) => {
-    fs.writeFileSync(resource, workouts);
-    res.status(500).send({ error: 'Missing field' });
+    fs.writeFile(resource, exercises, (err, data) => {
+        res.status(500).send({ error: 'Unimplemented' });
+    });
 });
 
 exports.default = api;

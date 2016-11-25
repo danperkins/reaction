@@ -57,7 +57,11 @@ export class ExercisePlannerApp extends React.Component<any,any> {
   }
 
   componentDidMount() {
-    let workouts = axios.get('http://localhost:3000/api/workouts').then((v) => v.data);
+    let workouts = axios.get('http://localhost:3000/api/workouts', {
+      headers: {
+        'Accept': 'application/json'
+      }
+    }).then((v) => v.data);
     let exercises = axios.get('http://localhost:3000/api/exercises').then((v) => v.data);
 
     Promise.all([workouts, exercises]).then((v) => {

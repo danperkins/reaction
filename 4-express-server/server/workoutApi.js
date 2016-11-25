@@ -12,7 +12,7 @@ if (!nextId) {
 }
 
 api.get('/', (req, res) => {
-    res.send(workouts);
+    res.json(workouts);
 });
 
 api.delete('/:workoutId', (req, res) => {
@@ -20,8 +20,16 @@ api.delete('/:workoutId', (req, res) => {
 
     if (newWorkouts.length < workouts.length) {
         workouts = newWorkouts;
-        fs.writeFileSync(resource, JSON.stringify(workouts));
-        res.end();
+        fs.writeFile(resource, JSON.stringify(workouts), (err, data) => {
+            if (err) {
+                var error = {
+                    code: 'InternalServerError',
+                    message: err
+                };
+                res.status(500).send({ error: error });
+            }
+            res.status(204).end();        
+        });
     } else {
         res.status(404).send({
             error: {
@@ -55,8 +63,17 @@ api.post('/', (req, res) => {
         workout.id = (nextId++).toString();
         workout.date = Date.now();
         workouts.push(workout);
-        fs.writeFileSync(resource, JSON.stringify(workouts));
-        res.status(201).send(workout);
+        fs.writeFile(resource, JSON.stringify(workouts, null, 4), (err, data) => {
+            if (err) {
+                error = {
+                    code: 'InternalServerError',
+                    message: err
+                };
+                res.status(500).send({ error: error });
+            } else {
+                res.status(201).json(workout);
+            }
+        });
     }
 });
 
