@@ -29,13 +29,13 @@ export class ExercisePlannerApp extends React.Component<any,any> {
     }
 
     this.addNewWorkout = this.addNewWorkout.bind(this);
-    this.setFinderView = () => this.setState({ view: 'ExerciseFinder'});
-    this.setHistoryView = () => this.setState({ view: 'WorkoutHistory'});
+    this.setFinderView = () => this.setState({ view: 'ExerciseFinder' });
+    this.setHistoryView = () => this.setState({ view: 'WorkoutHistory' });
     this.deleteWorkout = this.deleteWorkout.bind(this);
   }
 
   addNewWorkout(workout: IWorkout) {
-    return axios.post('http://localhost:3000/api/workouts', workout).then((v) => {
+    return axios.post('/api/workouts', workout).then((v) => {
       let workout = v.data;
       this.setState({
         workoutHistory: this.state.workoutHistory.concat([workout])
@@ -49,7 +49,7 @@ export class ExercisePlannerApp extends React.Component<any,any> {
   }
 
   deleteWorkout(workout: IWorkout) {
-    return axios.delete('http://localhost:3000/api/workouts/' + workout.id).then((v) => {
+    return axios.delete('/api/workouts/' + workout.id).then((v) => {
       this.setState({
         workoutHistory: this.state.workoutHistory.filter((w) => w.id !== workout.id)
       })
@@ -57,12 +57,12 @@ export class ExercisePlannerApp extends React.Component<any,any> {
   }
 
   componentDidMount() {
-    let workouts = axios.get('http://localhost:3000/api/workouts', {
+    let workouts = axios.get('/api/workouts', {
       headers: {
         'Accept': 'application/json'
       }
     }).then((v) => v.data);
-    let exercises = axios.get('http://localhost:3000/api/exercises').then((v) => v.data);
+    let exercises = axios.get('/api/exercises').then((v) => v.data);
 
     Promise.all([workouts, exercises]).then((v) => {
       this.setState({
@@ -72,7 +72,6 @@ export class ExercisePlannerApp extends React.Component<any,any> {
     }).catch((err) => {
       console.log('Error: ' + err);
     });
-
   }
 
   render(): JSX.Element {
