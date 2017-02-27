@@ -1,0 +1,41 @@
+{
+  "name": "4-express-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha testConfig/mochaCmd.js",
+    "build": "webpack",
+    "typings": "typings install",
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/mocha": "^2.2.39",
+    "@types/node": "^7.0.5",
+    "axios": "^0.14.0",
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
+    "css-loader": "^0.23.1",
+    "express": "^4.13.4",
+    "less": "^2.6.1",
+    "less-loader": "^2.2.3",
+    "pug": "^2.0.0-beta6",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "style-loader": "^0.13.1",
+    "ts-loader": "^2.0.0",
+    "typescript": "^2.1.6",
+    "typings": "^0.7.11",
+    "webpack": "^1.12.14"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "enzyme": "^2.3.0",
+    "jsdom": "^8.4.0",
+    "mocha": "^2.4.5",
+    "react-addons-test-utils": "^15.1.0",
+    "sinon": "^2.0.0-pre"
+  }
+}
