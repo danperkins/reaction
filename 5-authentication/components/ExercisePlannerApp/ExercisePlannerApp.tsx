@@ -2,10 +2,11 @@ import * as React from 'react';
 
 import { IExercise } from '../Exercise/Exercise';
 import { ExerciseFinder } from '../ExerciseFinder/ExerciseFinder';
+import { SignIn } from '../SignIn/SignIn';
 import { IWorkout, WorkoutHistory } from '../WorkoutHistory/WorkoutHistory';
 import * as axios from 'axios';
 import './ExercisePlannerApp.less';
-import { getUserData, signIn } from '../../services/auth';
+import { getUserData } from '../../services/auth';
 
 declare var fetch;
 
@@ -21,7 +22,6 @@ const clientSecret = 'vPLMoFYRt-e0RSecQBbiaFF8';
 export class ExercisePlannerApp extends React.Component<any,any> {
   private setFinderView: () => void;
   private setHistoryView: () => void;
-  private googleAuthWindow = null;
 
   constructor() {
     super();
@@ -40,7 +40,11 @@ export class ExercisePlannerApp extends React.Component<any,any> {
   }
 
   addNewWorkout(workout: IWorkout) {
-    return axios.post('/api/workouts', workout).then((v) => {
+    return axios.post('/api/workouts', workout, {
+      headers: {
+        'Authorization': getUserData()
+      }
+    }).then((v) => {
       let workout = v.data;
       this.setState({
         workoutHistory: this.state.workoutHistory.concat([workout])
@@ -93,11 +97,7 @@ export class ExercisePlannerApp extends React.Component<any,any> {
             <div className="buttonContainer">
               <button className="appViewSwitch" onClick={this.setFinderView}>Exercise Finder</button>
               <button className="appViewSwitch" onClick={this.setHistoryView}>Workout History</button>
-              {
-                userData
-                ? <span>SIGNED IN</span>
-                : <button className="signIn" onClick={signIn}>Sign In</button>
-              }
+              <SignIn />
             </div>
           </div>
           {paneContent}
