@@ -34,7 +34,7 @@ export class ExerciseFinder extends React.Component<ExerciseFinderProps, Exercis
   private workoutNotes: HTMLInputElement;
 
   private clearWorkoutCallback: () => void;
-  private logWorkoutCallback: () => void;
+  public logWorkoutCallback: () => void;
 
   constructor(props) {
     super(props);

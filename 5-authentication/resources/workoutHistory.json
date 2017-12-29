@@ -1,1 +1,108 @@
-[{"id":"2","exercises":["Benchpress","Kettlebell Swing","Kettlebell Swing","Kettlebell Swing"],"notes":"Did a workout","date":1460780507044},{"id":"3","exercises":["Benchpress","Dips","Benchpress","Dips","Benchpress","Dips"],"notes":"Lots of chest exercises","date":1460780777489},{"exercises":["Front Squat","Deadlift","Kettlebell Swing"],"notes":"something new","id":"4","date":1476284521181},{"id":"6","exercises":["Deadlift","Deadlift","Deadlift","Deadlift","Deadlift"],"notes":"lifting","date":1476416963065},{"id":"7","exercises":["Benchpress","Front Squat","Deadlift"],"notes":"uuuuuu","date":1479531177236},{"id":"8","exercises":["Front Squat","Front Squat","Front Squat","Dips","Dips","Front Squat"],"notes":"squatty dips","date":1480052226546}]
+{
+    "sampleCollection": [
+        {
+            "id": "2",
+            "exercises": [
+                "Benchpress",
+                "Kettlebell Swing",
+                "Kettlebell Swing",
+                "Kettlebell Swing"
+            ],
+            "notes": "Did a workout",
+            "date": 1460780507044
+        },
+        {
+            "id": "3",
+            "exercises": [
+                "Benchpress",
+                "Dips",
+                "Benchpress",
+                "Dips",
+                "Benchpress",
+                "Dips"
+            ],
+            "notes": "Lots of chest exercises",
+            "date": 1460780777489
+        },
+        {
+            "exercises": [
+                "Front Squat",
+                "Deadlift",
+                "Kettlebell Swing"
+            ],
+            "notes": "something new",
+            "id": "4",
+            "date": 1476284521181
+        },
+        {
+            "id": "6",
+            "exercises": [
+                "Deadlift",
+                "Deadlift",
+                "Deadlift",
+                "Deadlift",
+                "Deadlift"
+            ],
+            "notes": "lifting",
+            "date": 1476416963065
+        },
+        {
+            "id": "7",
+            "exercises": [
+                "Benchpress",
+                "Front Squat",
+                "Deadlift"
+            ],
+            "notes": "uuuuuu",
+            "date": 1479531177236
+        },
+        {
+            "id": "8",
+            "exercises": [
+                "Front Squat",
+                "Front Squat",
+                "Front Squat",
+                "Dips",
+                "Dips",
+                "Front Squat"
+            ],
+            "notes": "squatty dips",
+            "date": 1480052226546
+        },
+        {
+            "id": "9",
+            "exercises": [
+                "Dips",
+                "Kettlebell Swing",
+                "Kettlebell Swing"
+            ],
+            "notes": "I did stuff",
+            "date": 1514039539677
+        }
+    ],
+    "114105293071146598448": [
+        {
+            "id": "1514513232360",
+            "exercises": [
+                "Front Squat",
+                "Front Squat",
+                "Benchpress"
+            ],
+            "notes": "Today's wooorrororor",
+            "date": 1514513232360
+        },
+        {
+            "id": "1514577358337",
+            "exercises": [
+                "Front Squat",
+                "Kettlebell Swing",
+                "Front Squat",
+                "Kettlebell Swing",
+                "Front Squat",
+                "Kettlebell Swing"
+            ],
+            "notes": "Leg workout",
+            "date": 1514577358337
+        }
+    ]
+}

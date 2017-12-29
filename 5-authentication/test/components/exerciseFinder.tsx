@@ -11,15 +11,15 @@ import { ExerciseCatalog } from '../../components/ExerciseCatalog/ExerciseCatalo
 import * as axios from 'axios';
 
 describe("ExerciseFinder component", () => {
-    let xhr: Sinon.SinonFakeXMLHttpRequest;
-    let reqs: Sinon.SinonFakeXMLHttpRequest[];
+    let xhr: sinon.SinonFakeXMLHttpRequest;
+    let reqs: sinon.SinonFakeXMLHttpRequest[];
 
     beforeEach(() => {
         xhr = sinon.useFakeXMLHttpRequest();
         reqs = [];
 
         // Save the fake request so we can respond to it later
-        xhr.onCreate = (fakeRequest: Sinon.SinonFakeXMLHttpRequest) => {
+        xhr.onCreate = (fakeRequest: sinon.SinonFakeXMLHttpRequest) => {
             reqs.push(fakeRequest);
         };
     });
@@ -55,7 +55,7 @@ describe("ExerciseFinder component", () => {
     });
 
     it('should add a workout to history', () => {
-        let callback: Sinon.SinonSpy;
+        let callback: sinon.SinonSpy;
         let testExercises = ['test Exercise'];
         let workout: IWorkout = { id: '3', exercises: testExercises };
 
@@ -77,7 +77,7 @@ describe("ExerciseFinder component", () => {
 
         exerciseFinder.setState({ currentWorkout: workout });
         let notesInput = exerciseFinder.find('input.notes');
-        (notesInput as any).node.value = testNotes;
+        notesInput.instance().value = testNotes;
 
         exerciseFinder.find('.logWorkout').simulate('click');
         chai.expect(logWorkoutSpy.calledOnce, 'Callback fires').to.be.true;
@@ -92,7 +92,7 @@ describe("ExerciseFinder component", () => {
     });
 
     it('should not clear exercises on addNewWorkout error', () => {
-        let callback: Sinon.SinonSpy;
+        let callback: sinon.SinonSpy;
         let testExercises = ['test Exercise'];
         let workout: IWorkout = { id: '3', exercises: testExercises };
 
@@ -155,11 +155,11 @@ describe("ExerciseFinder component", () => {
         chai.expect(allItems.length, 'all items should be visible').to.equal(StaticExerciseCatalog.length);
 
         let searchInput = exerciseFinder.find('input.search');
-        (searchInput as any).node.value = 'b';
+        searchInput.instance().value = 'b';
         searchInput.simulate('change');
         chai.expect(inst.getFilteredItems().length, 'search for "b" should hide some items').to.equal(2);
 
-        (searchInput as any).node.value = 'd';
+        searchInput.instance().value = 'd';
         searchInput.simulate('change');
         chai.expect(inst.getFilteredItems().length, 'search for "d" should hide different items').to.equal(3);
     });

@@ -4,9 +4,9 @@ import { IExercise } from '../Exercise/Exercise';
 import { ExerciseFinder } from '../ExerciseFinder/ExerciseFinder';
 import { SignIn } from '../SignIn/SignIn';
 import { IWorkout, WorkoutHistory } from '../WorkoutHistory/WorkoutHistory';
-import * as axios from 'axios';
+import axios from 'axios';
 import './ExercisePlannerApp.less';
-import { getUserData } from '../../services/auth';
+import { getAuthToken } from '../../services/auth';
 
 declare var fetch;
 
@@ -16,15 +16,12 @@ interface IExercisePlannerAppState {
   workoutHistory: IWorkout[]
 }
 
-const clientId = '517001085227-90qlaf3fpbktccbg2fgitvi2478i51ok.apps.googleusercontent.com';
-const clientSecret = 'vPLMoFYRt-e0RSecQBbiaFF8';
-
 export class ExercisePlannerApp extends React.Component<any,any> {
   private setFinderView: () => void;
   private setHistoryView: () => void;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     // Initial state
     this.state = {
@@ -35,16 +32,16 @@ export class ExercisePlannerApp extends React.Component<any,any> {
 
     this.addNewWorkout = this.addNewWorkout.bind(this);
     this.setFinderView = () => this.setState({ view: 'ExerciseFinder' });
-    this.setHistoryView = () => this.setState({ view: 'WorkoutHistory' });
+    this.setHistoryView = () => {
+      this.refreshWorkouts().then(data => {
+        this.setState({ view: 'WorkoutHistory', workoutHistory: data });
+      });
+    }
     this.deleteWorkout = this.deleteWorkout.bind(this);
   }
 
   addNewWorkout(workout: IWorkout) {
-    return axios.post('/api/workouts', workout, {
-      headers: {
-        'Authorization': getUserData()
-      }
-    }).then((v) => {
+    return axios.post('/api/workouts', workout).then((v) => {
       let workout = v.data;
       this.setState({
         workoutHistory: this.state.workoutHistory.concat([workout])
@@ -65,12 +62,23 @@ export class ExercisePlannerApp extends React.Component<any,any> {
     });
   }
 
+  refreshWorkouts() {
+    let workouts = Promise.resolve(null);
+    const authToken = getAuthToken();
+    if (authToken) {
+      workouts = axios.get('/api/workouts', {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization':  `Bearer ${authToken}`
+        }
+      }).then((v) => v.data);
+    }
+
+    return workouts;
+  }
+
   componentDidMount() {
-    let workouts = axios.get('/api/workouts', {
-      headers: {
-        'Accept': 'application/json'
-      }
-    }).then((v) => v.data);
+    let workouts = this.refreshWorkouts();
     let exercises = axios.get('/api/exercises').then((v) => v.data);
 
     Promise.all([workouts, exercises]).then((v) => {
@@ -87,9 +95,8 @@ export class ExercisePlannerApp extends React.Component<any,any> {
     let exerciseFinder = <ExerciseFinder catalog={this.state.exerciseCatalog} addNewWorkout={this.addNewWorkout} />
     let workoutHistory = <WorkoutHistory workouts={this.state.workoutHistory} deleteWorkout={this.deleteWorkout} />;
     let paneContent = this.state.view === 'ExerciseFinder' ? exerciseFinder : workoutHistory;
-    let userData = getUserData();
 
-    if (this.state.exerciseCatalog && this.state.workoutHistory) {
+    if (this.state.exerciseCatalog) {
       return (
         <div className="exercisePlannerApp">
           <div className="appHeader">

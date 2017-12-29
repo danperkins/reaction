@@ -1,23 +1,91 @@
-import * as axios from 'axios';
-
-const client_id = '517001085227-90qlaf3fpbktccbg2fgitvi2478i51ok.apps.googleusercontent.com';
+import axios from 'axios';
 
 interface IUserData {
-    id: string,
+    token: string,
     name: string,
-    given_name: string,
-    family_name: string,
-    picture: string,
-    locale: string
+    image: string,
 }
 
 let userData = null;
 let tokenInfo = null;
+let authToken = null;
 let googleAuthWindow = null;
 
 export function getUserData() {
     return userData;
 }
+
+export function getAuthToken() {
+    return authToken;
+}
+
+function authenticate() {
+    let windowOptions2 = {
+        width: 300,
+        height: 500,
+        top: (window.outerHeight - 500) / 2,
+        left: (window.outerWidth - 200) /2,
+        menubar: false
+    };
+    let windowOptions = `width=323,height=569,top=${(window.outerHeight-569)/2},left=${(window.outerWidth-323)/2}`;
+    googleAuthWindow = window.open("http://localhost:3000/auth/login", 'authWindow', windowOptions);
+    let closeListener = null;
+    let closeTimeoutId = null;
+
+    return new Promise((resolve, reject) => {
+        (window as any).authenticateCallback = (data) => {
+            clearTimeout(closeTimeoutId);
+            if (data && data.token) {
+                resolve(data);
+            } else {
+                reject({ error: 'No token received'});
+            }
+        };
+
+        closeListener = () => {
+            closeTimeoutId = setTimeout(() => {
+                if (!googleAuthWindow || googleAuthWindow.closed) {
+                    (window as any).authenticateCallback = null;
+                    reject({ error: 'Window closed'});
+                    return;
+                }
+                closeListener();
+            }, 700); 
+        }
+
+        closeListener();
+    });
+}
+
+export function signIn() {
+    return Promise.resolve()
+        .then(authenticate)
+        .then((d: any) => {
+            authToken = d.token;
+            userData = d;
+            axios.defaults.headers.Authorization = `Bearer ${authToken}`;
+            return authToken;
+        })
+        .catch((e) => {
+            console.log(e.error);
+            return Promise.reject(e);
+        });
+}
+
+// The token and user info is currently stored in memory not in a cookie
+// So it will be reset by just refreshing the page
+export function signOut() {
+    return window.location.href = window.location.href;
+}
+
+// Old code from client-only authentication without JWT, just google
+/*
+let googleAuthEndpoint = 'https://accounts.google.com/o/oauth2/v2/auth'
+    + '?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile'
+    + '&state=none'
+    + '&redirect_uri=http%3A%2F%2Flocalhost%3A3000'
+    + '&response_type=token'
+    + '&client_id=' + client_id;
 
 function validateToken(accessToken: string) {
     return axios
@@ -37,82 +105,4 @@ function getUser(accessToken: string) {
             userData = v.data;
         })
 }
-
-function authenticate() {
-    let googleAuthEndpoint = 'https://accounts.google.com/o/oauth2/v2/auth'
-        + '?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile'
-        // + '?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar'
-        // + '?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fblogger+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar'
-        // + '&immediate=false'
-        // + '&include_granted_scopes=false&hl=en&proxy=oauth2relay633233447'
-        + '&state=none'
-        + '&redirect_uri=http%3A%2F%2Flocalhost%3A3000'
-        + '&response_type=token'
-        + '&client_id=' + client_id;
-    let windowOptions2 = {
-        width: 300,
-        height: 500,
-        top: (window.outerHeight - 500) / 2,
-        left: (window.outerWidth - 200) /2,
-        menubar: false
-    };
-    let windowOptions = `width=323,height=569,top=${(window.outerHeight-569)/2},left=${(window.outerWidth-323)/2}`;
-    googleAuthWindow = window.open(googleAuthEndpoint, 'authWindow', windowOptions);
-    let successListener = null;
-
-    return new Promise((resolve, reject) => {
-        successListener = () => setTimeout(() => {
-            try {
-                if (!googleAuthWindow) {
-                    reject({ error: 'window closed'});
-                    return;
-                }
-
-                // Attempting to reference this properety will throw an error if the origin is still
-                // under google.com -- after authenticating the window will redirect to this site again
-                if (googleAuthWindow.location.origin === window.location.origin) {
-                    let location = googleAuthWindow.location;
-                    // code taken from Google OAuth documentation for parsing OAuth response parameters
-                    let params: any = {}, queryString = location.hash.substring(1),
-                        regex = /([^&=]+)=([^&]*)/g, m = null;
-                    while (m = regex.exec(queryString)) {
-                        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-                    }
-                    googleAuthWindow.close();
-                    if (params.error) {
-                        reject(params.error);
-                        return;
-                    }
-
-                    resolve(params);
-                } else {
-                    successListener();
-                }
-            } catch(err) {
-                successListener();
-            }
-        }, 200);
-
-        successListener();
-    })
-}
-
-export function signIn() {
-    return Promise.resolve()
-        .then(authenticate)
-        .then((d: any) => {
-            let token = d.access_token
-            return Promise.all([token, validateToken(token)]);
-        })
-        .then((d: any) => {
-            return getUser(d[0]);
-        })
-        .catch((err) => {
-            console.log(err);
-            return Promise.reject(err);
-        });
-}
-
-export function signOut() {
-    return Promise.resolve();
-}
+*/

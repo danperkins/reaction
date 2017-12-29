@@ -13,9 +13,7 @@ export class SignIn extends React.Component<any, any> {
         this.signIn = () => {
             signIn().then(() => this.forceUpdate()).catch(() => this.forceUpdate());
         };
-        this.signOut = () => {
-            signOut().then(() => this.forceUpdate()).catch(() => this.forceUpdate());
-        }
+        this.signOut = signOut;
     }
 
     render() {
@@ -26,8 +24,8 @@ export class SignIn extends React.Component<any, any> {
 
         return (
             <div className='signIn'>
-                <span>{userData.name ? userData.name : ''}</span>
-                <img src={userData.picture ? userData.picture : ''} />
+                <span>{userData.name || ''}</span>
+                <img src={userData.image || ''} />
             </div>
         );
     }
