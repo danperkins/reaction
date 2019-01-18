@@ -1,0 +1,49 @@
+.exerciseCatalogArea {
+
+  .exerciseItem {
+    display: inline-block;
+    width: 180px;
+    height: 205px;
+    padding: 10px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 35);
+    box-sizing: border-box;
+    margin: 0 15px 15px 0;
+    vertical-align: top;
+    position: relative;
+
+    .name {
+      font-size: 24px;
+    }
+
+    .addExercise {
+      height: 30px;
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      display: none;
+    }
+
+    &:hover {
+      .description,.equipment,.muscleGroups,.addExercise {
+        -webkit-transition: opacity .2s ease-in;
+
+        opacity: 1;
+      }
+      .addExercise {
+        display: block;
+      }
+    }
+    .description {
+      font-weight: bold;
+    }
+
+    .description,.muscleGroups,.equipment,.addExercise {
+      -webkit-transition: opacity .2s ease-in;
+
+      opacity: .3;
+    }
+
+  }
+
+
+}

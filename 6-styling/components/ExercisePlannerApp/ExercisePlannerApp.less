@@ -1,0 +1,27 @@
+@import '../../styles/root.less';
+@import 'colors';
+
+.exercisePlannerApp {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+
+  .mainContent {
+    overflow-y: scroll;
+    padding: 8px;
+  }
+
+  button {
+    border: none;
+    border: 0px;
+    border-radius: 6px;
+    background-color: @primary-1;
+    color: white;
+
+    &:hover {
+      cursor: pointer;
+      background-color: @primary-3;
+    }
+  }
+}

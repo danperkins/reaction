@@ -1,0 +1,32 @@
+@import 'colors';
+
+div.dumbbell {
+    display: inline-block;
+    height: 30px;
+    width: 50px;
+
+    span {
+        display: inline-block;
+        width: 6%;
+        background-color: @primary-1;
+        vertical-align: middle;
+        border-radius: 5px;
+    }
+    span + span {
+        margin-left: 2%;
+    }
+    .small {
+        height: 40%;
+    }
+    .medium {
+        height: 85%;
+    }
+    .large {
+        height: 100%;
+    }
+    .bar {
+        height: 18%;
+        width: 50%;
+        border-radius: 0;
+    }
+}

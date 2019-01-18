@@ -1,0 +1,43 @@
+  .leftNav {
+    height: 100%;
+    flex-shrink: 0;
+    flex-basis: 200px;
+    background-color: #00A0B2;
+    padding: 8px;
+    color: #ffffff;
+
+    .toggleArea {
+      //margin: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      .appTitle {
+        margin-left: 8px;
+        vertical-align: middle;
+        position: relative;
+        top: -2px;
+      }
+    }
+
+    .viewSelector {
+      margin-top: 8px;
+
+      .appViewSwitch {
+        display: block;
+        font-size: 16px;
+        line-height: 32px;
+        width: 70%;
+        margin: auto;
+
+        & + .appViewSwitch {
+          margin-top: 12px;
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+  }
