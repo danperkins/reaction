@@ -1,13 +1,26 @@
 import * as React from 'react';
 import axios from 'axios';
+import { IWorkoutExercise } from '../Exercise/Exercise';
 
 import './WorkoutHistory.less';
 
 export interface IWorkout {
   id: string;
-  exercises: string[];
+  exercises: IWorkoutExercise[];
   notes?: string;
   date?: number;
+}
+
+export interface IAmrapWorkout extends IWorkout {
+  timeFormat: 'AMRAP',
+  time: number
+}
+
+export interface ITabataWorkout extends IWorkout {
+  timeFormat: 'Tabata',
+  workTime: number,
+  restTime: number,
+  time: number
 }
 
 export interface IWorkoutHistoryProps {

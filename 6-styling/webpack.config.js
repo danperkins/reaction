@@ -1,25 +1,40 @@
+const path = require('path');
+
 module.exports = {
+  mode: 'development',
   entry:  {
     index: './main.tsx'
   },
   resolve: {
-    extensions: ['', '.js', '.ts', '.tsx']
+    extensions: ['.js', '.ts', '.tsx']
   },
   output: {
-    path: './dist',
+    path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
   },
   module: {
     //noParse: [ /sinon/],
-    loaders: [
-      { test: /\.less$/, loader: "style!css!less" },
-      { test: /\.css$/, loader:"stsyle!css"},
-      {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        loader: 'ts-loader',
-      },
-    ]
+    rules: [{
+      test: /\.less$/,
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader'
+      }, {
+        loader: 'less-loader', options: {
+          paths: [
+            path.resolve(__dirname, 'styles')
+          ]
+        }
+      }]
+    },
+    {
+      test: /\.tsx?$/,
+      exclude: /node_modules/,
+      use: [{
+        loader: 'ts-loader'
+      }]
+    }]
   },
   // This is listed in the 'enzyme' getting started details for making webpack work well with that library
   externals: {
